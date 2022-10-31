@@ -3,7 +3,7 @@ from spacy.tokenizer import Tokenizer
 from spacy.lang.en import English
 import os
 
-data_path = "./NLPPapersSpider/nlp"
+data_path = "./PaperSpider/dataset"
 meetings = ["ACL", "EMNLP"]
 years = ["2018", "2019", "2020", "2021"]
 
@@ -44,6 +44,6 @@ def write_data(data, outpath):
 
 
 if __name__ == "__main__":
-    print ("---------start read pdf-----------")
+    print("---------start read pdf-----------")
     data = read_data_from_path()
     write_data(data, data_path)

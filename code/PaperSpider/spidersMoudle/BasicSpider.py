@@ -80,7 +80,7 @@ class BasicSpider:
             print("{0}:".format(year))
             for keyword in self.opt.Keywords:
                 keyword1 = self.opt.Meeting+' '+keyword
-                #url = 'https://dblp.uni-trier.de/search?q={0}%20venue%3A{1}%3A%20year%3A{2}%3A'.format(keyword,self.opt.Meeting,year)
+                #url = 'https://dblp.uni-trier.de/search?q={0}%20venue%3A{1}%3A%20year%3A{2}%3A'.format(keyword, self.opt.Meeting, year)
                 url = 'https://dblp.uni-trier.de/search?q={0}%20year%3A{1}%3A'.format(keyword1, year)
                 page = self.get_page(url)
                 urls = self.get_url(page)
