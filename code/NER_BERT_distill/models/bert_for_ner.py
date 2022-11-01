@@ -75,7 +75,7 @@ class BilstmCrfForNer(BertPreTrainedModel):
         outputs = (logits,)
         if labels is not None:
             loss = self.crf(emissions = logits, tags=labels, mask=attention_mask)
-            outputs =(-1*loss,)+outputs
+            outputs = (-1 * loss,) + outputs
         return outputs # (loss), scores
 
 
