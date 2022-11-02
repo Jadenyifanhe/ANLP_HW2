@@ -1,43 +1,22 @@
-### dataset list
+# NER_BERT_distill
 
-1. conll: 人工标注数据
+### Usage
+There are two models explored. The first one is BERT-CRF. To run it, use `sh scripts/run_ner_crf.sh`, and its results would be saved in `outputs/conll_output/bert`.
 
-### model list
+The second model is BILSTM-CRF as student and do knowledge distillation on the first model BERT-CRF as teacher.
+We can also use the unlabeled samples as test.txt to let the teacher predict, and then use the output as the hard label as the training set of the student.
+To run it, use `sh scripts/run_ner_crf_for_student.sh`, and `BERT_BASE_DIR` should be the path of saved teacher model.
 
-2. BERT+CRF (teacher)
-3. IDCNN+CRF (student)
-4. BILSTM+CRF (student)
+To test model performance, run `scripts/run_ner_crf_for_test.sh` for both models. You can modify the configurations either in `run_ner_xxx.py` or `run_ner_xxx.sh`.
 
-### requirement
-
-1. PyTorch == 1.8.0
-2. transformers==4.18.0
-4. python3.6+
-
-### 运行代码
-1. teacher在scripts/run_ner_xxx.sh
-2. student模型配置文件在scripts/run_ner_xxx_for_student.sh, student配置中BERT_BASE_DIR要写teacher模型路径
-3. Modify the configuration information in `run_ner_xxx.py` or `run_ner_xxx.sh` .
-4. `sh scripts/run_ner_xxx.sh`
-
-### 蒸馏方式-2 (比运行run_ner_xxx_for_student.sh方式效果要好)
-1. 可以用大量无监爬取数据直接作为test.txt让teacher预测hard label
-2. 将1得到的数据直接作为student的训练集, 采用teacher方式继续训练, student继承teacher的某些层like BERT_BASE_DIR要写teacher模型路径
-4. Modify the configuration information in `run_ner_xxx.py` or `run_ner_xxx.sh` .
-5. `sh scripts/run_ner_xxx.sh`
-
-### 更改配置
-1. TRAIN_TYPE  -- teacher or student
-2. OUTPUR_DIR -- 输出路径
-3. TASK_NAME -- 数据集名称
-
-**note**: file structure of the model
-
-```text
+Note that we need to put pretrain model [bert-base-uncased](https://huggingface.co/bert-base-uncased?text=Paris+is+the+%5BMASK%5D+of+France.)
+in `prev_trained_model/bert-base-uncased`. And its files level is as follow:
+```
 ├── prev_trained_model
-|  └── bert_base
-|  |  └── pytorch_model.bin
+|  └── bert-base-uncased
 |  |  └── config.json
+|  |  └── pytorch_model.bin
+|  |  └── tokenizer_config.json
+|  |  └── tokenizer.json
 |  |  └── vocab.txt
-|  |  └── ......
 ```

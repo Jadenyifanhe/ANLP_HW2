@@ -3,7 +3,7 @@ export BERT_BASE_DIR=$CURRENT_DIR/outputs/conll_output/bert/best
 export DATA_DIR=$CURRENT_DIR/datasets
 export OUTPUR_DIR=$CURRENT_DIR/outputs
 TASK_NAME="conll"
-TRAIN_TYPE="teacher"
+TRAIN_TYPE="teacher" # teacher or student
 #
 CUDA_VISIBLE_DEVICES=2 python run_ner_crf.py \
   --model_type=bert \
@@ -19,7 +19,7 @@ CUDA_VISIBLE_DEVICES=2 python run_ner_crf.py \
   --per_gpu_train_batch_size=128 \
   --per_gpu_eval_batch_size=128 \
   --learning_rate=1e-5 \
-  --num_train_epochs=100.0 \
+  --num_train_epochs=100 \
   --logging_steps=-1 \
   --save_steps=-1 \
   --output_dir=$OUTPUR_DIR/${TASK_NAME}_output/ \

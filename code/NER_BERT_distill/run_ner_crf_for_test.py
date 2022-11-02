@@ -11,7 +11,7 @@ from torch.utils.data.distributed import DistributedSampler
 from callback.optimizater.adamw import AdamW
 from callback.lr_scheduler import get_linear_schedule_with_warmup
 from callback.progressbar import ProgressBar
-from tools.common import seed_everything,json_to_text
+from tools.common import seed_everything, json_to_text
 from tools.common import init_logger, logger
 
 from transformers import WEIGHTS_NAME, BertConfig,get_linear_schedule_with_warmup,AdamW, BertTokenizer
@@ -30,6 +30,7 @@ MODEL_CLASSES = {
     'idcnn':(BertConfig, IDCNNCrfForNer, BertTokenizer),
     'bilstm': (BertConfig, BilstmCrfForNer, BertTokenizer),
 }
+
 
 def train(args, train_dataset, eval_dataset, model, tokenizer):
     """ Train the model """
@@ -105,7 +106,7 @@ def train(args, train_dataset, eval_dataset, model, tokenizer):
     model.zero_grad()
     seed_everything(args.seed)  # Added here for reproductibility (even between python 2 and 3)
     pbar = ProgressBar(n_total=len(train_dataloader), desc='Training', num_epochs=int(args.num_train_epochs))
-    if args.save_steps==-1 and args.logging_steps==-1:
+    if args.save_steps == -1 and args.logging_steps == -1:
         args.logging_steps=len(train_dataloader)
         args.save_steps = len(train_dataloader)
     best_score = -1.0
@@ -125,7 +126,7 @@ def train(args, train_dataset, eval_dataset, model, tokenizer):
                 inputs["token_type_ids"] = (batch[2] if args.model_type in ["bert", "xlnet"] else None)
             outputs = model(**inputs)
             loss = outputs[0]  # model outputs are always tuple in pytorch-transformers (see doc)
-            #student model need add loss function like Lseq-fuzzy
+            # student model need add loss function like Lseq-fuzzy
             if args.train_type == "student":
                 teacher_logit = batch[-1]
                 ce_loss = KLLoss()(outputs[1], teacher_logit)
@@ -171,7 +172,7 @@ def train(args, train_dataset, eval_dataset, model, tokenizer):
                 #     # torch.save(optimizer.state_dict(), os.path.join(output_dir, "optimizer.pt"))
                 #     torch.save(scheduler.state_dict(), os.path.join(output_dir, "scheduler.pt"))
                 #     logger.info("Saving optimizer and scheduler states to %s", output_dir)
-        #evaluate for every epoch, and save best f1 model on dev
+        # evaluate for every epoch, and save best f1 model on dev
         results = evaluate(args, model, eval_dataset, epoch)
         if best_score < results["f1"]:
             best_score = results["f1"]
@@ -207,7 +208,7 @@ def evaluate(args, model, eval_dataset, prefix):
         eval_dataset.tensors = eval_dataset.tensors[:3] + (torch.tensor([args.train_max_seq_length] * eval_dataset.tensors[0].shape[0]), eval_dataset.tensors[-1])
     eval_dataloader = DataLoader(eval_dataset, sampler=eval_sampler, batch_size=args.eval_batch_size,
                                  collate_fn=collate_fn)
-    # Eval!
+    # Eval
     logger.info("***** Running evaluation epoch %s *****", prefix)
     logger.info("  Num examples = %d", len(eval_dataset))
     logger.info("  Batch size = %d", args.eval_batch_size)
@@ -274,7 +275,7 @@ def predict(args, model, tokenizer):
         test_dataset.tensors = test_dataset.tensors[:3] + (torch.tensor([args.train_max_seq_length] * test_dataset.tensors[0].shape[0]), test_dataset.tensors[-1])
 
     test_dataloader = DataLoader(test_dataset, sampler=test_sampler, batch_size=1, collate_fn=collate_fn)
-    # Eval!
+    # Eval
     logger.info("***** Running prediction *****")
     logger.info("  Num examples = %d", len(test_dataset))
     logger.info("  Batch size = %d", 1)
@@ -298,7 +299,7 @@ def predict(args, model, tokenizer):
             logits = outputs[0]
             # save logit of teacher model
             tags = model.crf.decode(logits, inputs['attention_mask'])
-            tags  = tags.squeeze(0).cpu().numpy().tolist()
+            tags = tags.squeeze(0).cpu().numpy().tolist()
         preds = tags[0][1:-1]  # [CLS]XXXX[SEP]
         input_tokens = tokenizer.convert_ids_to_tokens(inputs["input_ids"].cpu().squeeze(0).numpy())[1:-1]
         line = get_conll_out_format(test_original[step].text_a, input_tokens, preds, args.id2label)

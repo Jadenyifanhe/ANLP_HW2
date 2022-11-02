@@ -274,7 +274,7 @@ def predict(args, model, tokenizer):
         test_dataset.tensors = test_dataset.tensors[:3] + (torch.tensor([args.train_max_seq_length] * test_dataset.tensors[0].shape[0]), test_dataset.tensors[-1])
 
     test_dataloader = DataLoader(test_dataset, sampler=test_sampler, batch_size=1, collate_fn=collate_fn)
-    # Eval!
+    # Eval
     logger.info("***** Running prediction *****")
     logger.info("  Num examples = %d", len(test_dataset))
     logger.info("  Batch size = %d", 1)
@@ -468,7 +468,7 @@ def main():
         global_step, tr_loss = train(args, train_dataset, eval_dataset, model, tokenizer)
         logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
 
-        #save teacher prediction result for student training
+        # save teacher prediction result for student training
         args.train_type = args.train_type.lower()
         if args.train_type == "teacher":
             teacher_logit = []

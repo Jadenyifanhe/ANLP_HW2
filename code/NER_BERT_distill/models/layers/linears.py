@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class FeedForwardNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, dropout_rate=0):
         super(FeedForwardNetwork, self).__init__()
@@ -23,6 +24,7 @@ class PoolerStartLogits(nn.Module):
     def forward(self, hidden_states, p_mask=None):
         x = self.dense(hidden_states)
         return x
+
 
 class PoolerEndLogits(nn.Module):
     def __init__(self, hidden_size, num_classes):

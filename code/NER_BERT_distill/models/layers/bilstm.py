@@ -12,18 +12,18 @@ class BILSTM(nn.Module):
                  num_classes,
                  bi_tag):
 
-        super(BILSTM,self).__init__()
+        super(BILSTM, self).__init__()
         self.num_layer = num_layer
         self.hidden_size = hidden_size
         self.dropout_p = dropout_p
 
-        self.lstm = nn.LSTM(input_size = input_size,
-                            hidden_size = hidden_size,
-                            num_layers = num_layer,
-                            batch_first = True,
-                            dropout = dropout_p,
-                            bidirectional = bi_tag)
+        self.lstm = nn.LSTM(input_size=input_size,
+                            hidden_size=hidden_size,
+                            num_layers=num_layer,
+                            batch_first=True,
+                            dropout=dropout_p,
+                            bidirectional=bi_tag)
 
-    def forward(self,inputs):
+    def forward(self, inputs):
         output, _ = self.lstm(inputs)
         return output

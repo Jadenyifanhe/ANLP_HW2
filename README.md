@@ -5,7 +5,7 @@ Web scraper and dataset build in `code/PaperSpider/`. Models and experiments in 
 
 ### Requirements
 ```
-PyTorch == 1.8.0
+PyTorch==1.8.0
 transformers==4.18.0
-python3.6+
+python==3.6+
 ```
