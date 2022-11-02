@@ -21,7 +21,7 @@ def read_data_from_path():
             for path, _, file_list in os.walk(filepath):
                 for file_name in file_list:
                     file = os.path.join(path, file_name)
-                    print ("-------start tokenizer paper: {}".format(file))
+                    print("-------start tokenizer paper: {}".format(file))
                     reader = PdfReader(file)
                     for page in reader.pages:
                         text = page.extract_text()
